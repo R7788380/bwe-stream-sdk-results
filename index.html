@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BWE Stream SDK — Listening Test</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --card: #f6f8fa; --accent: #0969da;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8d96a0; --line: #30363d; --card: #161b22; --accent: #4493f8; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Noto Sans TC", sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; }
+  h2 { font-size: 1.25rem; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.05rem; margin: 28px 0 10px; }
+  p.lead { color: var(--muted); margin: 0 0 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 14px 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  figure { margin: 0 0 12px; }
+  figure img { width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--line); background: #000; }
+  figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 7px 8px; border-top: 1px solid var(--line); vertical-align: middle; }
+  th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+  td.label { width: 34%; white-space: nowrap; }
+  td.label b { display: block; }
+  td.label span { color: var(--muted); font-size: 0.85rem; }
+  audio { width: 100%; max-width: 420px; height: 34px; }
+  .tag { display: inline-block; font-size: 0.75rem; padding: 1px 7px; border: 1px solid var(--line);
+         border-radius: 999px; color: var(--muted); margin-left: 6px; vertical-align: middle; }
+  .bwe td.label b { color: var(--accent); }
+  .scroll { overflow-x: auto; }
+  table.results { min-width: 560px; font-size: 0.9rem; }
+  table.results th, table.results td { white-space: nowrap; }
+  table.results td.num { font-variant-numeric: tabular-nums; }
+  table.results td.num small { color: var(--muted); }
+  table.results tr.bwe td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  table.results tr.bwe td.sys { color: var(--accent); font-weight: 600; }
+  table.results tr.group td { border-top: 2px solid var(--line); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 14px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Bandwidth Extension Stream SDK — Listening Test</h1>
+  <p class="lead">
+    Narrowband speech (8 kHz / 16 kHz) reconstructed to 48 kHz by the SDK. Each block pairs the
+    spectrograms from the objective evaluation with the exact audio behind them. Use headphones;
+    the difference lives above 4 kHz.
+  </p>
+
+  <h2>Objective evaluation</h2>
+  <p class="lead">
+    <b>VCTK</b> (English, 30 speakers × 10 utterances) and <b>AISHELL-3</b> (Mandarin, 30 speakers × 10
+    utterances), scored against the 48 kHz originals. <b>no BWE</b> is the narrowband input simply
+    upsampled back to 48 kHz. Mean ± std over files; ↓ lower is better, ↑ higher is better.
+  </p>
+
+  <div class="card">
+    <div class="scroll">
+      <table class="results">
+        <thead>
+          <tr><th>Corpus</th><th>Mode</th><th>System</th><th>N</th><th>LSD ↓</th><th>LSD-HF ↓</th><th>LSD-LF ↓</th><th>SNR (dB) ↑</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group"><td>VCTK</td><td>8k→48k</td><td class="sys">no BWE</td><td>300</td>
+              <td class="num">3.740 <small>± 0.241</small></td><td class="num">4.083 <small>± 0.264</small></td><td class="num">0.769 <small>± 0.054</small></td><td class="num">19.10 <small>± 4.72</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>300</td>
+              <td class="num">1.801 <small>± 0.156</small></td><td class="num">1.940 <small>± 0.172</small></td><td class="num">0.753 <small>± 0.054</small></td><td class="num">14.38 <small>± 2.42</small></td></tr>
+
+          <tr class="group"><td>VCTK</td><td>16k→48k</td><td class="sys">no BWE</td><td>300</td>
+              <td class="num">3.333 <small>± 0.208</small></td><td class="num">4.048 <small>± 0.254</small></td><td class="num">0.745 <small>± 0.053</small></td><td class="num">25.10 <small>± 5.63</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>300</td>
+              <td class="num">1.668 <small>± 0.094</small></td><td class="num">1.956 <small>± 0.115</small></td><td class="num">0.806 <small>± 0.054</small></td><td class="num">15.98 <small>± 2.14</small></td></tr>
+
+          <tr class="group"><td>AISHELL-3</td><td>8k→48k</td><td class="sys">no BWE</td><td>297</td>
+              <td class="num">2.831 <small>± 0.345</small></td><td class="num">3.083 <small>± 0.381</small></td><td class="num">0.731 <small>± 0.062</small></td><td class="num">23.07 <small>± 6.68</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>297</td>
+              <td class="num">1.234 <small>± 0.155</small></td><td class="num">1.306 <small>± 0.171</small></td><td class="num">0.726 <small>± 0.084</small></td><td class="num">15.65 <small>± 2.63</small></td></tr>
+
+          <tr class="group"><td>AISHELL-3</td><td>16k→48k</td><td class="sys">no BWE</td><td>297</td>
+              <td class="num">2.334 <small>± 0.306</small></td><td class="num">2.809 <small>± 0.380</small></td><td class="num">0.732 <small>± 0.070</small></td><td class="num">29.59 <small>± 7.70</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>297</td>
+              <td class="num">1.030 <small>± 0.082</small></td><td class="num">1.129 <small>± 0.096</small></td><td class="num">0.771 <small>± 0.089</small></td><td class="num">16.38 <small>± 2.95</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <figure>
+      <img src="eval/results/figures/lsd_hf_summary.png" alt="LSD-HF, no BWE vs BWE, per corpus and mode" loading="lazy">
+      <figcaption>High-band log-spectral distance against the 48 kHz reference — no BWE vs BWE, mean ± std over files.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Evaluation utterances</h2>
+  <p class="lead">Same preprocessing as the reported numbers: reference RMS-normalised to −26 dBFS,
+     band-limited with soxr, processed by the SDK, written as 16-bit PCM.</p>
+
+  <!-- ===== VCTK p229_113 ===== -->
+  <div class="card">
+    <h3>VCTK · p229_113 <span class="tag">English</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/VCTK_8k_p229_113_mic1.png" alt="Spectrogram, 8k to 48k" loading="lazy"><figcaption>8k → 48k: input / BWE / reference</figcaption></figure>
+      <figure><img src="eval/results/figures/VCTK_16k_p229_113_mic1.png" alt="Spectrogram, 16k to 48k" loading="lazy"><figcaption>16k → 48k: input / BWE / reference</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>Input 8 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 8 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Input 16 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 16 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Reference 48 kHz</b><span>original recording</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <!-- ===== VCTK p229_123 ===== -->
+  <div class="card">
+    <h3>VCTK · p229_123 <span class="tag">English</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/VCTK_8k_p229_123_mic1.png" alt="Spectrogram, 8k to 48k" loading="lazy"><figcaption>8k → 48k: input / BWE / reference</figcaption></figure>
+      <figure><img src="eval/results/figures/VCTK_16k_p229_123_mic1.png" alt="Spectrogram, 16k to 48k" loading="lazy"><figcaption>16k → 48k: input / BWE / reference</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>Input 8 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 8 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Input 16 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 16 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Reference 48 kHz</b><span>original recording</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <!-- ===== AISHELL-3 SSB00160056 ===== -->
+  <div class="card">
+    <h3>AISHELL-3 · SSB0016_0056 <span class="tag">Mandarin</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/AISHELL3_8k_SSB00160056.png" alt="Spectrogram, 8k to 48k" loading="lazy"><figcaption>8k → 48k: input / BWE / reference</figcaption></figure>
+      <figure><img src="eval/results/figures/AISHELL3_16k_SSB00160056.png" alt="Spectrogram, 16k to 48k" loading="lazy"><figcaption>16k → 48k: input / BWE / reference</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>Input 8 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 8 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Input 16 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 16 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Reference 48 kHz</b><span>original recording</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <!-- ===== AISHELL-3 SSB00160203 ===== -->
+  <div class="card">
+    <h3>AISHELL-3 · SSB0016_0203 <span class="tag">Mandarin</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/AISHELL3_8k_SSB00160203.png" alt="Spectrogram, 8k to 48k" loading="lazy"><figcaption>8k → 48k: input / BWE / reference</figcaption></figure>
+      <figure><img src="eval/results/figures/AISHELL3_16k_SSB00160203.png" alt="Spectrogram, 16k to 48k" loading="lazy"><figcaption>16k → 48k: input / BWE / reference</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>Input 8 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 8 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Input 16 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 16 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Reference 48 kHz</b><span>original recording</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <h2>Real-world clips</h2>
+  <p class="lead">Mandarin speech captured on a phone, no 48 kHz reference available — input and output only.</p>
+
+  <div class="card">
+    <h3>統神鼎王 <span class="tag">Mandarin · phone capture</span></h3>
+    <table>
+      <tr><td class="label"><b>Input 8 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="samples/統神鼎王_8kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 8 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="samples/統神鼎王_48k_from_8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Input 16 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="samples/統神鼎王_16kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 16 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="samples/統神鼎王_48k_from_16k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>控八控控 <span class="tag">Mandarin · phone capture</span></h3>
+    <table>
+      <tr><td class="label"><b>Input 8 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="samples/控八控控_8kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 8 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="samples/控八控控_48k_from_8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>Input 16 kHz</b><span>narrowband</span></td><td><audio controls preload="none" src="samples/控八控控_16kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>BWE from 16 kHz</b><span>48 kHz output</span></td><td><audio controls preload="none" src="samples/控八控控_48k_from_16k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <footer>
+    Corpus excerpts: VCTK-Corpus 0.92 (University of Edinburgh, CC BY 4.0) · AISHELL-3 (AISHELL Foundation, Apache-2.0).
+    Full tables: <code>eval/results/summary.md</code> in the repository.
+  </footer>
+</main>
+</body>
+</html>
