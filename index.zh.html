@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BWE Stream SDK — Listening Test</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --card: #f6f8fa; --accent: #0969da;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8d96a0; --line: #30363d; --card: #161b22; --accent: #4493f8; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Noto Sans TC", sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; }
+  h2 { font-size: 1.25rem; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.05rem; margin: 28px 0 10px; }
+  p.lead { color: var(--muted); margin: 0 0 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 14px 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  figure { margin: 0 0 12px; }
+  figure img { width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--line); background: #000; }
+  figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 7px 8px; border-top: 1px solid var(--line); vertical-align: middle; }
+  th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+  td.label { width: 34%; white-space: nowrap; }
+  td.label b { display: block; }
+  td.label span { color: var(--muted); font-size: 0.85rem; }
+  audio { width: 100%; max-width: 420px; height: 34px; }
+  .tag { display: inline-block; font-size: 0.75rem; padding: 1px 7px; border: 1px solid var(--line);
+         border-radius: 999px; color: var(--muted); margin-left: 6px; vertical-align: middle; }
+  .bwe td.label b { color: var(--accent); }
+  .scroll { overflow-x: auto; }
+  table.results { min-width: 560px; font-size: 0.9rem; }
+  table.results th, table.results td { white-space: nowrap; }
+  table.results td.num { font-variant-numeric: tabular-nums; }
+  table.results td.num small { color: var(--muted); }
+  table.results tr.bwe td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  table.results tr.bwe td.sys { color: var(--accent); font-weight: 600; }
+  table.results tr.group td { border-top: 2px solid var(--line); }
+  .lang { color: var(--muted); font-size: 0.85rem; margin: 0 0 14px; }
+  .lang b { color: var(--fg); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 14px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Bandwidth Extension Stream SDK — Listening Test</h1>
+  <p class="lang"><a href="index.html">English</a> · <b>中文</b></p>
+  <p class="lead">
+    SDK 將窄頻語音（8 kHz / 16 kHz）重建為 48 kHz。每個區塊同時呈現客觀評測的頻譜圖與對應的實際音檔。
+    建議戴耳機聆聽，差異主要在 4 kHz 以上。
+  </p>
+
+  <h2>客觀評測</h2>
+  <p class="lead">
+    <b>VCTK</b>（英語，30 位語者 × 10 句）與 <b>AISHELL-3</b>（國語，30 位語者 × 10 句），以 48 kHz 原始錄音為基準評分。
+    <b>無 BWE</b> 為窄頻輸入直接升頻回 48 kHz。數值為各檔案的平均 ± 標準差；↓ 越低越好，↑ 越高越好。
+  </p>
+
+  <div class="card">
+    <div class="scroll">
+      <table class="results">
+        <thead>
+          <tr><th>語料</th><th>模式</th><th>系統</th><th>檔數</th><th>LSD ↓</th><th>LSD-HF ↓</th><th>LSD-LF ↓</th><th>SNR (dB) ↑</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group"><td>VCTK</td><td>8k→48k</td><td class="sys">無 BWE</td><td>300</td>
+              <td class="num">3.740 <small>± 0.241</small></td><td class="num">4.083 <small>± 0.264</small></td><td class="num">0.769 <small>± 0.054</small></td><td class="num">19.10 <small>± 4.72</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>300</td>
+              <td class="num">1.801 <small>± 0.156</small></td><td class="num">1.940 <small>± 0.172</small></td><td class="num">0.753 <small>± 0.054</small></td><td class="num">14.38 <small>± 2.42</small></td></tr>
+
+          <tr class="group"><td>VCTK</td><td>16k→48k</td><td class="sys">無 BWE</td><td>300</td>
+              <td class="num">3.333 <small>± 0.208</small></td><td class="num">4.048 <small>± 0.254</small></td><td class="num">0.745 <small>± 0.053</small></td><td class="num">25.10 <small>± 5.63</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>300</td>
+              <td class="num">1.668 <small>± 0.094</small></td><td class="num">1.956 <small>± 0.115</small></td><td class="num">0.806 <small>± 0.054</small></td><td class="num">15.98 <small>± 2.14</small></td></tr>
+
+          <tr class="group"><td>AISHELL-3</td><td>8k→48k</td><td class="sys">無 BWE</td><td>297</td>
+              <td class="num">2.831 <small>± 0.345</small></td><td class="num">3.083 <small>± 0.381</small></td><td class="num">0.731 <small>± 0.062</small></td><td class="num">23.07 <small>± 6.68</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>297</td>
+              <td class="num">1.234 <small>± 0.155</small></td><td class="num">1.306 <small>± 0.171</small></td><td class="num">0.726 <small>± 0.084</small></td><td class="num">15.65 <small>± 2.63</small></td></tr>
+
+          <tr class="group"><td>AISHELL-3</td><td>16k→48k</td><td class="sys">無 BWE</td><td>297</td>
+              <td class="num">2.334 <small>± 0.306</small></td><td class="num">2.809 <small>± 0.380</small></td><td class="num">0.732 <small>± 0.070</small></td><td class="num">29.59 <small>± 7.70</small></td></tr>
+          <tr class="bwe"><td></td><td></td><td class="sys">BWE</td><td>297</td>
+              <td class="num">1.030 <small>± 0.082</small></td><td class="num">1.129 <small>± 0.096</small></td><td class="num">0.771 <small>± 0.089</small></td><td class="num">16.38 <small>± 2.95</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <figure>
+      <img src="eval/results/figures/lsd_hf_summary.png" alt="LSD-HF，無 BWE vs BWE，各語料與模式" loading="lazy">
+      <figcaption>高頻段對數頻譜距離（相對 48 kHz 參考）— 無 BWE vs BWE，各檔案平均 ± 標準差。</figcaption>
+    </figure>
+  </div>
+
+  <h2>評測語句</h2>
+  <p class="lead">前處理與上表數據完全相同：參考音檔 RMS 正規化至 −26 dBFS，以 soxr 限制頻寬，
+     經 SDK 處理後輸出為 16-bit PCM。</p>
+
+  <!-- ===== VCTK p229_113 ===== -->
+  <div class="card">
+    <h3>VCTK · p229_113 <span class="tag">英語</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/VCTK_8k_p229_113_mic1.png" alt="頻譜圖，8k → 48k" loading="lazy"><figcaption>8k → 48k：輸入 / BWE / 參考</figcaption></figure>
+      <figure><img src="eval/results/figures/VCTK_16k_p229_113_mic1.png" alt="頻譜圖，16k → 48k" loading="lazy"><figcaption>16k → 48k：輸入 / BWE / 參考</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>8 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>8 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>16 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>16 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>48 kHz 參考</b><span>原始錄音</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_113_mic1_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <!-- ===== VCTK p229_123 ===== -->
+  <div class="card">
+    <h3>VCTK · p229_123 <span class="tag">英語</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/VCTK_8k_p229_123_mic1.png" alt="頻譜圖，8k → 48k" loading="lazy"><figcaption>8k → 48k：輸入 / BWE / 參考</figcaption></figure>
+      <figure><img src="eval/results/figures/VCTK_16k_p229_123_mic1.png" alt="頻譜圖，16k → 48k" loading="lazy"><figcaption>16k → 48k：輸入 / BWE / 參考</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>8 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>8 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>16 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>16 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>48 kHz 參考</b><span>原始錄音</span></td><td><audio controls preload="none" src="eval/listening/VCTK/p229_123_mic1_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <!-- ===== AISHELL-3 SSB00160056 ===== -->
+  <div class="card">
+    <h3>AISHELL-3 · SSB0016_0056 <span class="tag">國語</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/AISHELL3_8k_SSB00160056.png" alt="頻譜圖，8k → 48k" loading="lazy"><figcaption>8k → 48k：輸入 / BWE / 參考</figcaption></figure>
+      <figure><img src="eval/results/figures/AISHELL3_16k_SSB00160056.png" alt="頻譜圖，16k → 48k" loading="lazy"><figcaption>16k → 48k：輸入 / BWE / 參考</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>8 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>8 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>16 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>16 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>48 kHz 參考</b><span>原始錄音</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160056_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <!-- ===== AISHELL-3 SSB00160203 ===== -->
+  <div class="card">
+    <h3>AISHELL-3 · SSB0016_0203 <span class="tag">國語</span></h3>
+    <div class="grid">
+      <figure><img src="eval/results/figures/AISHELL3_8k_SSB00160203.png" alt="頻譜圖，8k → 48k" loading="lazy"><figcaption>8k → 48k：輸入 / BWE / 參考</figcaption></figure>
+      <figure><img src="eval/results/figures/AISHELL3_16k_SSB00160203.png" alt="頻譜圖，16k → 48k" loading="lazy"><figcaption>16k → 48k：輸入 / BWE / 參考</figcaption></figure>
+    </div>
+    <table>
+      <tr><td class="label"><b>8 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_in8k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>8 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_bwe_from8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>16 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_in16k.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>16 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_bwe_from16k.wav"></audio></td></tr>
+      <tr><td class="label"><b>48 kHz 參考</b><span>原始錄音</span></td><td><audio controls preload="none" src="eval/listening/AISHELL3/SSB00160203_ref48k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <h2>真實錄音</h2>
+  <p class="lead">手機錄製的國語語音，無 48 kHz 參考音檔 — 僅提供輸入與輸出。</p>
+
+  <div class="card">
+    <h3>統神鼎王 <span class="tag">國語 · 手機錄音</span></h3>
+    <table>
+      <tr><td class="label"><b>8 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="samples/統神鼎王_8kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>8 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="samples/統神鼎王_48k_from_8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>16 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="samples/統神鼎王_16kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>16 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="samples/統神鼎王_48k_from_16k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>控八控控 <span class="tag">國語 · 手機錄音</span></h3>
+    <table>
+      <tr><td class="label"><b>8 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="samples/控八控控_8kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>8 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="samples/控八控控_48k_from_8k.wav"></audio></td></tr>
+      <tr><td class="label"><b>16 kHz 輸入</b><span>窄頻</span></td><td><audio controls preload="none" src="samples/控八控控_16kHz.wav"></audio></td></tr>
+      <tr class="bwe"><td class="label"><b>16 kHz → BWE</b><span>48 kHz 輸出</span></td><td><audio controls preload="none" src="samples/控八控控_48k_from_16k.wav"></audio></td></tr>
+    </table>
+  </div>
+
+  <footer>
+    語料節錄：VCTK-Corpus 0.92（愛丁堡大學，CC BY 4.0）· AISHELL-3（AISHELL 基金會，Apache-2.0）。
+    完整表格見 repo 內的 <code>eval/results/summary.md</code>。
+  </footer>
+</main>
+</body>
+</html>

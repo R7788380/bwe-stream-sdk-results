@@ -27,8 +27,9 @@ narrowband PCM (8 / 16 kHz) ──► analysis ──► neural high-band estima
 
 ## Listen
 
-**▶ [Listening page](https://r7788380.github.io/bwe-stream-sdk-results/)** — every clip
-below with an in-browser player, side by side with its spectrogram.
+**▶ [Listening page](https://r7788380.github.io/bwe-stream-sdk-results/)**
+([中文版](https://r7788380.github.io/bwe-stream-sdk-results/index.zh.html)) — every
+clip below with an in-browser player, side by side with its spectrogram.
 (GitHub cannot play audio inside a README; the page is [`index.html`](index.html)
 served through GitHub Pages.)
 
